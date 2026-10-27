@@ -1,72 +1,66 @@
-# Python Queue 1
+# Python Queue 2
 
 Read the Abstract Data Types lecture (Queue section) before you start.
 https://drive.google.com/file/d/1jXGQdSvuUYjGXl-PUuHMUzKWEBGQoARL/view?usp=sharing
 
 **Rules for this assignment**
 
-- Do **not** use `.append()` or `.pop()` inside the Enqueue and Dequeue functions.
+- Do **not** use `.append()` or `.pop()` inside `Enqueue()` and `Dequeue()`.
   Move the pointers yourself and store with `Queue[TailPointer] = ...`. The tests check for this.
-- Functions **return** their answer — do not print.
-- Use `global` for every queue variable a function changes.
-
----
+- Functions **return** their answer. Only print when the exercise says so.
+- Use `global Queue, HeadPointer, TailPointer, NumberItems` in every function that changes them.
 
 ## Exercise 1
 
 **Problem:**
 
-Build a **linear queue** of names for a ticket line.
+Build a **circular queue** of integers.
 
 Set up the queue:
 
-- `Queue` → a global array of **6** elements, all set to `""` (empty string)
-- `HeadPointer` → a global integer, set to `-1`
-- `TailPointer` → a global integer, set to `-1`
+- `Queue` → a global array of **10** elements, all set to `-1`
+- `HeadPointer` and `TailPointer` → global integers, both set to `-1`
+- `NumberItems` → a global integer, set to `0`
 
 Then write two functions:
 
-`Enqueue(Name)`
+`Enqueue(Data)`
 
-- If the queue is full (`TailPointer` is 5), return `False`
-- Otherwise add 1 to `TailPointer`, store `Name` at `Queue[TailPointer]`,
-  and return `True`
-- If this is the **first** item ever (`HeadPointer` is -1), set `HeadPointer` to 0
+- If the queue is full (`NumberItems` is 10), return `False`
+- If the queue is empty, set `HeadPointer` and `TailPointer` to 0
+- Otherwise add 1 to `TailPointer` — and if it reaches **10**, set it back to **0**
+- Store `Data` at `Queue[TailPointer]`, add 1 to `NumberItems`, and return `True`
 
 `Dequeue()`
 
-- If the queue is empty (`HeadPointer` is -1, or `HeadPointer` is more than
-  `TailPointer`), return `""`
-- Otherwise return the name at `Queue[HeadPointer]`, and add 1 to `HeadPointer`
+- If the queue is empty (`NumberItems` is 0), return **`-999`**
+- Otherwise read the item at `Queue[HeadPointer]`
+- Add 1 to `HeadPointer` — and if it reaches **10**, set it back to **0**
+- Take 1 off `NumberItems`
+- If the queue is now empty, set `HeadPointer` and `TailPointer` back to `-1`
+- Return the item
+
+**Why -999 and not -1?** This queue can hold negative numbers, so `-1` could be
+a real item. The rogue value must be something that can never be real data.
 
 **Example:**
 
     Input:
-      print(Enqueue("Bat"))
-      print(Enqueue("Saraa"))
-      print(Enqueue("Anu"))
+      Enqueue(10)
+      Enqueue(20)
+      Enqueue(30)
       print(Dequeue())
       print(Dequeue())
-      print(HeadPointer, TailPointer)
+      print(NumberItems, HeadPointer, TailPointer)
+      print(Dequeue())
+      print(Dequeue())
 
     Output:
-      True
-      True
-      True
-      Bat
-      Saraa
-      2 2
-
-**This is a linear queue.** After 6 names have joined, `Enqueue` returns
-`False` — even if some names have already left. That is the problem the
-circular queue in Exercise 2 fixes.
-
-    Input:
-      Enqueue 6 names, then Dequeue() twice, then:
-      print(Enqueue("G"))
-
-    Output:
-      False
+      10
+      20
+      1 2 2
+      30
+      -999
 
 ---
 
@@ -74,62 +68,41 @@ circular queue in Exercise 2 fixes.
 
 **Problem:**
 
-Build a **circular queue** that reuses the free spaces.
+`LoadQueue(Filename)`
 
-Set up the queue:
+The file has one whole number on each line. Read the file and **enqueue** each
+number, as an **integer**, at the back of the queue. Skip any blank lines.
 
-- `CircularQueue` → a global array of **6** elements, all set to `""`
-- `CircularHead` and `CircularTail` → global integers, both set to `-1`
-- `NumberItems` → a global integer, set to `0`
-
-Then write three functions:
-
-`CircularEnqueue(Name)`
-
-- If the queue is full (`NumberItems` is 6), return `False`
-- If the queue is empty, set `CircularHead` and `CircularTail` to 0
-- Otherwise add 1 to `CircularTail` — and if it reaches **6**, set it back to **0**
-- Store `Name` at `CircularQueue[CircularTail]`, add 1 to `NumberItems`, return `True`
-
-`CircularDequeue()`
-
-- If the queue is empty (`NumberItems` is 0), return `""`
-- Otherwise read the name at `CircularQueue[CircularHead]`
-- Add 1 to `CircularHead` — and if it reaches **6**, set it back to **0**
-- Take 1 off `NumberItems`
-- If the queue is now empty, set `CircularHead` and `CircularTail` back to `-1`
-- Return the name
-
-`ShowQueue()`
-
-- Return all the names from the **front** to the **back** of the queue,
-  with `", "` between them. Return `""` if the queue is empty.
-- Start at `CircularHead` and take `NumberItems` steps — remember to wrap
-  back to 0 when you reach the end of the array.
-- Do **not** change the queue.
+- If `Enqueue()` returns `False`, print `Queue full` **once** and stop.
+- Return how many numbers were added.
+- Do **not** empty the queue first — the numbers go after anything already in it.
 
 **Example:**
 
-    Input:
-      Enqueue A, B, C, D, E, F
-      print(CircularEnqueue("X"))
-      CircularDequeue()
-      CircularDequeue()
-      CircularDequeue()
-      print(CircularEnqueue("G"))
-      print(CircularEnqueue("H"))
-      print(CircularTail)
-      print(ShowQueue())
+    Example File Content (numbers.txt):
+        5
+        10
+        15
 
-    Output:
-      False
-      True
-      True
-      1
-      D, E, F, G, H
+    Example Input:
+        print(LoadQueue("numbers.txt"))
+        print(Dequeue())
 
-`G` was stored at index 0 and `H` at index 1 — the tail **wrapped around**.
-`ShowQueue()` still lists them in queue order: D, E, F, then G, H.
+    Program Output:
+        3
+        5
+
+    Example File Content (numbers.txt):
+        1
+        2
+        ...
+        12
+
+    Program Output:
+        Queue full
+        10
+
+Only the first 10 numbers fit.
 
 ---
 
@@ -137,43 +110,34 @@ Then write three functions:
 
 **Problem:**
 
-`HotPotato(Names, Passes)`
+`RemoveNegatives()`
 
-A party game. Everyone stands in a circle and passes a hot potato. After
-`Passes` passes, whoever is holding the potato is **out**. Keep going until one
-person is left — the **winner**.
+Remove every **negative** number from the queue, but keep the other numbers
+in the **same order**. Return how many numbers were removed.
 
-Use **your circular queue** from Exercise 2:
+Use only `Enqueue()` and `Dequeue()`:
 
-1. **Empty the queue first:** set `CircularHead` and `CircularTail` to `-1`
-   and `NumberItems` to `0`.
-2. Enqueue every name in `Names` (there are at most 6).
-3. While more than one person is in the queue:
-    - Do `Passes` passes. One pass = dequeue the person at the front and
-      enqueue them again at the back.
-    - Dequeue the person now at the front — they are out.
-4. Return the name of the last person left. If `Names` is empty, return `""`.
+1. Store how many items are in the queue **before** you start.
+2. Repeat that many times:
+    - Dequeue the item at the front.
+    - If it is **not** negative, enqueue it again at the back.
+
+`0` is not negative — keep it.
 
 **Example:**
 
+    Queue before (front → back):   5  -2  7  -1  3
+
     Input:
-      print(HotPotato(["Bat", "Saraa", "Anu", "Dorj", "Tuya"], 2))
+      print(RemoveNegatives())
 
     Output:
-      Dorj
+      2
 
-How it works (front of the queue on the left):
+    Queue after (front → back):    5  7  3
 
-    Start:                       Bat Saraa Anu Dorj Tuya
-    2 passes -> Anu is out:      Dorj Tuya Bat Saraa
-    2 passes -> Bat is out:      Saraa Dorj Tuya
-    2 passes -> Tuya is out:     Saraa Dorj
-    2 passes -> Saraa is out:    Dorj          <- winner
-
-    Input:                                         Output:
-      HotPotato(["Bat", "Saraa", "Anu"], 1)          Anu
-      HotPotato(["Bat"], 4)                          Bat
-
-The queue keeps going round and round — that only works because it is **circular**.
+*Hint:* why store the count first? `NumberItems` changes while you are
+dequeuing and enqueuing. If your loop checks `NumberItems` every time, it
+will stop at the wrong moment.
 
 ---
