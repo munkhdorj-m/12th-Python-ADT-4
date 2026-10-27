@@ -1,0 +1,205 @@
+name: Autograding Tests
+
+on:
+  push:
+    paths:
+      - 'assignment.py'
+      - 'test_assignment.py'
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pytest
+        run: pip install -r requirements.txt
+
+      - name: Ex 1 - Queue set up
+        id: ex1_initial_queue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Queue set up
+          command: pytest test_assignment.py::test1_initial_queue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 1 - Enqueue
+        id: ex1_enqueue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Enqueue
+          command: pytest test_assignment.py::test1_enqueue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 1 - Enqueue when full
+        id: ex1_enqueue_when_full
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Enqueue when full
+          command: pytest test_assignment.py::test1_enqueue_when_full
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 1 - Dequeue
+        id: ex1_dequeue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Dequeue
+          command: pytest test_assignment.py::test1_dequeue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 1 - Dequeue when empty
+        id: ex1_dequeue_when_empty
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Dequeue when empty
+          command: pytest test_assignment.py::test1_dequeue_when_empty
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 1 - Linear queue full
+        id: ex1_linear_queue_problem
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Linear queue full
+          command: pytest test_assignment.py::test1_linear_queue_problem
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 1 - Uses pointers
+        id: ex1_uses_pointers
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 1 - Uses pointers
+          command: pytest test_assignment.py::test1_uses_pointers
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - Queue set up
+        id: ex2_initial_queue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - Queue set up
+          command: pytest test_assignment.py::test2_initial_queue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - Enqueue and dequeue
+        id: ex2_enqueue_and_dequeue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - Enqueue and dequeue
+          command: pytest test_assignment.py::test2_enqueue_and_dequeue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - Wraps around
+        id: ex2_wraps_around
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - Wraps around
+          command: pytest test_assignment.py::test2_wraps_around
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - Empty resets pointers
+        id: ex2_empty_resets_pointers
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - Empty resets pointers
+          command: pytest test_assignment.py::test2_empty_resets_pointers
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - ShowQueue
+        id: ex2_show_queue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - ShowQueue
+          command: pytest test_assignment.py::test2_show_queue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - ShowQueue after wrap
+        id: ex2_show_queue_after_wrap
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - ShowQueue after wrap
+          command: pytest test_assignment.py::test2_show_queue_after_wrap
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 2 - Uses pointers
+        id: ex2_uses_pointers
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 2 - Uses pointers
+          command: pytest test_assignment.py::test2_uses_pointers
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 3 - Hot potato
+        id: ex3_hot_potato
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 3 - Hot potato
+          command: pytest test_assignment.py::test3_hot_potato
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 3 - Starts with empty queue
+        id: ex3_starts_with_empty_queue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 3 - Starts with empty queue
+          command: pytest test_assignment.py::test3_starts_with_empty_queue
+          timeout: 2
+          max-score: 1
+
+      - name: Ex 3 - Uses circular queue
+        id: ex3_uses_circular_queue
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Ex 3 - Uses circular queue
+          command: pytest test_assignment.py::test3_uses_circular_queue
+          timeout: 2
+          max-score: 1
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          EX1_INITIAL_QUEUE_RESULTS: "${{ steps.ex1_initial_queue.outputs.result }}"
+          EX1_ENQUEUE_RESULTS: "${{ steps.ex1_enqueue.outputs.result }}"
+          EX1_ENQUEUE_WHEN_FULL_RESULTS: "${{ steps.ex1_enqueue_when_full.outputs.result }}"
+          EX1_DEQUEUE_RESULTS: "${{ steps.ex1_dequeue.outputs.result }}"
+          EX1_DEQUEUE_WHEN_EMPTY_RESULTS: "${{ steps.ex1_dequeue_when_empty.outputs.result }}"
+          EX1_LINEAR_QUEUE_PROBLEM_RESULTS: "${{ steps.ex1_linear_queue_problem.outputs.result }}"
+          EX1_USES_POINTERS_RESULTS: "${{ steps.ex1_uses_pointers.outputs.result }}"
+          EX2_INITIAL_QUEUE_RESULTS: "${{ steps.ex2_initial_queue.outputs.result }}"
+          EX2_ENQUEUE_AND_DEQUEUE_RESULTS: "${{ steps.ex2_enqueue_and_dequeue.outputs.result }}"
+          EX2_WRAPS_AROUND_RESULTS: "${{ steps.ex2_wraps_around.outputs.result }}"
+          EX2_EMPTY_RESETS_POINTERS_RESULTS: "${{ steps.ex2_empty_resets_pointers.outputs.result }}"
+          EX2_SHOW_QUEUE_RESULTS: "${{ steps.ex2_show_queue.outputs.result }}"
+          EX2_SHOW_QUEUE_AFTER_WRAP_RESULTS: "${{ steps.ex2_show_queue_after_wrap.outputs.result }}"
+          EX2_USES_POINTERS_RESULTS: "${{ steps.ex2_uses_pointers.outputs.result }}"
+          EX3_HOT_POTATO_RESULTS: "${{ steps.ex3_hot_potato.outputs.result }}"
+          EX3_STARTS_WITH_EMPTY_QUEUE_RESULTS: "${{ steps.ex3_starts_with_empty_queue.outputs.result }}"
+          EX3_USES_CIRCULAR_QUEUE_RESULTS: "${{ steps.ex3_uses_circular_queue.outputs.result }}"
+        with:
+          runners: ex1_initial_queue,ex1_enqueue,ex1_enqueue_when_full,ex1_dequeue,ex1_dequeue_when_empty,ex1_linear_queue_problem,ex1_uses_pointers,ex2_initial_queue,ex2_enqueue_and_dequeue,ex2_wraps_around,ex2_empty_resets_pointers,ex2_show_queue,ex2_show_queue_after_wrap,ex2_uses_pointers,ex3_hot_potato,ex3_starts_with_empty_queue,ex3_uses_circular_queue
