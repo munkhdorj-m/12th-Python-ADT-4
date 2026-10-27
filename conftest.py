@@ -5,15 +5,22 @@ import pytest
 HINTS = [
     ["local variable",
      "Your function changes a global variable without saying so.\n"
-     "Add a global line at the top of the function, for example:\n"
-     "    global Queue, HeadPointer, TailPointer\n"
-     "    global CircularQueue, CircularHead, CircularTail, NumberItems"],
+     "Add this line at the top of the function:\n"
+     "    global Queue, HeadPointer, TailPointer, NumberItems"],
 
     ["index out of range",
      "You used an index outside the array.\n"
-     "  - Did you fill the queue with 6 elements (all \"\") at the start?\n"
-     "  - Does Enqueue check for full BEFORE adding 1 to the tail?\n"
-     "  - Circular queue: does the pointer go back to 0 when it reaches 6?"],
+     "  - Did you fill Queue with 10 elements (all -1) at the start?\n"
+     "  - Does Enqueue check for full BEFORE moving the tail?\n"
+     "  - Does each pointer go back to 0 when it reaches 10?"],
+
+    ["invalid literal for int()",
+     "int() was given something that is not a number.\n"
+     "Did you .strip() the line first? Are you skipping blank lines?"],
+
+    ["No such file or directory",
+     "Python could not find the file. Use the Filename parameter -\n"
+     "never type a file name inside your function."],
 
     ["'NoneType' object",
      "Something is None (nothing). A function probably forgot to 'return'\n"
